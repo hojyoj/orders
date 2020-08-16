@@ -69,47 +69,47 @@ class Master(view.Master):
 
         ## Details
         self.details = Details(self)
-        self.details.hide()        
-        
+        self.details.hide()
+
         self.ui.innerSplitter.insertWidget(0, self.details)
-        
+
         self.connect(self.details, QtCore.SIGNAL('doubleClicked()'), self.details_toggle)
-        
+
         self.connect(self.eventRouter, QtCore.SIGNAL("suppliersChanged()"), self.loadSuppliers)
         self.connect(self.eventRouter, QtCore.SIGNAL("customersChanged()"), self.loadCustomers)
 
         # print("""    orders.view.Master.__init__() - END""")
 
-    
+
     def add(self):
         f=k
         document_kind = self.cnt.documentKinds_pull(category='documentKind', name='Order', cast_=self.cnt.role)[0]
         view.Master.add(self, document_kind)
-    
-    
+
+
     '''
     def captureView_new(self, *args, **kwds):
         # print("    orders.view.Master.capture_new()")
-        
+
         captureView = CaptureView(self, *args, **kwds)
         self.connect(captureView, QtCore.SIGNAL("captureViewClosed()"), self.captureView_close)
         self.ui.outerSplitter.insertWidget(1, captureView)
-        
+
         # print("    orders.view.Master.capture_new() - END")
-        
+
         return captureView
     '''
-    
-    
+
+
     def init(self, duty='purchase'):
         # print("""    orders.view.Master.init()""")
 
-        view.Master.init(self)  
-    
-        
-        
+        view.Master.init(self)
+
+
+
         # self.capture.init()
-        
+
         if duty is 'sale':
             self.duty = u'sale'
             self.captureView.documentKind_code = 13513      ## sale order
@@ -129,14 +129,14 @@ class Master(view.Master):
         self.setCursor(QtCore.Qt.WaitCursor)
 
         # order = self.data()[index]
-        order = self.ui.listTA.item(self.ui.listTA.currentRow(),0).data(1001)        
-        
+        order = self.ui.listTA.item(self.ui.listTA.currentRow(),0).data(1001)
+
         self.cnt.app.master.titleWidget.setText(u"Modificación de Pedido")
-        
+
         self.captureView.edit(order)
-        
+
         self.setCursor(QtCore.Qt.ArrowCursor)
-        
+
     '''
     def innerHandlePressed(self):
         """orders.view.Master.innerHandlePressed()"""
@@ -180,7 +180,7 @@ class Master(view.Master):
 
     def loadSuppliers(self):
         """orders.view.Master.loadSuppliers()"""
-        
+
         suppliers = self.cnt.suppliers()
 
         # self.capture.entities_load(suppliers)
@@ -205,18 +205,18 @@ class Master(view.Master):
 
     def manager_new(self):
         # print("""    orders.Master.manager_new()""")
-        
+
         self.manager = Manager(self)
 
         self.connect(self.manager, QtCore.SIGNAL('doubleClicked()'), self.details_toggle)
-        
+
         self.ui.innerSplitter.insertWidget(0, self.manager)
-        
+
         self.connect(self.eventRouter, QtCore.SIGNAL("ordersChanged()"), self.manager.data_update)
 
         # print("""    orders.Master.manager_new() - END""")
 
-    
+
     def outerHandlePressed(self):
         """orders.view.Master.outerHandlePressed()"""
         if self.ui.outerSplitter.sizes()[0] == 0:
@@ -247,14 +247,14 @@ class Manager(view.Manager):
 
         ## TABLA DE CONSULTA
         # self.ui.listTA = self.ui.tablaConsulta
-        
+
         self.labels = [u"Proveedor", u"Folio", u"Fecha", u"Status", u"Monto", u""]
         self.ui.listTA.setColumnCount(len(self.labels))
         self.ui.listTA.setHorizontalHeaderLabels(self.labels)
-        
+
         # self.ui.listTA.horizontalHeader().setResizeMode(0, QtGui.QHeaderView.Stretch)
         self.ui.listTA.horizontalHeader().setResizeMode(5, QtGui.QHeaderView.Stretch)
-        
+
         # self.ui.listTA.setToolTip(u"ALT+D muestra detalles de la Orden seleccionada")
 
 
@@ -269,12 +269,12 @@ class Manager(view.Manager):
         font = QtGui.QFont()
         font.setPointSize(10 * self.mst.layoutZoom)
         font.setBold(True)
-        
+
         self.ui.toAgregar.setFont(font)
         self.ui.toAgregar.setDefaultAction(self.aAdd)
         self.ui.toAgregar.setIconSize(QtCore.QSize(44, 40))
         self.ui.toAgregar.setToolButtonStyle(iconTextLayout)
-        
+
         ## Edit
         icon1 = QtGui.QIcon()
         icon1.addPixmap(QtGui.QPixmap(":/Redo.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
@@ -337,7 +337,7 @@ class Manager(view.Manager):
         self.connect(self.mst.eventRouter, QtCore.SIGNAL('ordersChanged()'), self.data_update)
         self.connect(self.mst.eventRouter, QtCore.SIGNAL('productosChanged()'), self.updateButtons)
 
-        '''  
+        '''
         # self.upToDate = False
 
         self.setFocusPolicy(QtCore.Qt.StrongFocus)
@@ -350,7 +350,7 @@ class Manager(view.Manager):
         ## Methods like this that access personalized modules must replace not inherit
         self.ui = manager_ui.Ui_Form()
         self.ui.setupUi(self)
-        
+
 
     def cancelProcess(self):
         if self.ui.listTA.currentRow() < 0:
@@ -393,9 +393,9 @@ class Manager(view.Manager):
             self.setCursor(QtCore.Qt.WaitCursor)
 
             index = self.ui.listTA.item(self.ui.listTA.currentRow(),0).data(1001)
-            
+
             # order = self.data()[index]
-            
+
             self.mst.process_edit(order)
 
             self.setCursor(QtCore.Qt.ArrowCursor)
@@ -494,7 +494,7 @@ class Manager(view.Manager):
 
 
     def init(self):
-        
+
         self.data_update()
 
 
@@ -538,9 +538,9 @@ class Manager(view.Manager):
             # item = self.ui.listTA.item(self.ui.listTA.currentRow(), 0)
             # process = item.data(self.ui.listTA.PROCESS)
             # id = item.data(self.ui.listTA.DOCUMENT_ID)
-            
+
             # self.mst.current_set(process, id)
-            
+
         # self.updateButtons()
 
 
@@ -556,26 +556,26 @@ class Manager(view.Manager):
     def theme_update(self):
 
         buttonsStyle = "border:2px outset #908878; border-top:0px; border-top-left-radius:0px; border-top-right-radius:0px; border-bottom-left-radius:12px; border-bottom-right-radius:12px; background-color:qradialgradient(cx:.5, cy:.75, radius:1.5,fx:.5, fy:.75, stop:0 {}, stop:1 {});".format(self.mst.theme['background']['color'], self.mst.theme['background']['color2'])
-        
+
         self.ui.toAgregar.setStyleSheet(buttonsStyle)
         self.ui.toModificar.setStyleSheet(buttonsStyle)
         self.ui.toEliminar.setStyleSheet(buttonsStyle)
-        self.ui.toImprimir.setStyleSheet(buttonsStyle)        
-        
+        self.ui.toImprimir.setStyleSheet(buttonsStyle)
+
         self.listMN.setStyleSheet("QMenu{background-color:QRadialGradient(cx:.5, cy:.5, radius:1, fx:.5, fy:.5, stop:0 #FFFFFF, stop:1 #FFD040);} QMenu::item{color:#202020;} QMenu::item:selected{color:#000000; background-color:#F0C038;}")
 
 
     def updateButtons(self):
 
         # view.Manager.updateButtons(self, count)
-        
+
         message4New = u""
         message4Filter = u""
         message4Edit = u""
         message4Remove = u""
         message4Print = u""
         self.message4Info = u""
-        
+
         if self.mst.duty == 'purchase' and not self.cnt.supplier():
             message4New += u"No hay proveedores registrados\n"
             message4Filter += u"No hay proveedores registrados\n"
@@ -684,15 +684,15 @@ class Manager(view.Manager):
 
             # self.ui.listTA.setSortingEnabled(False)
             self.ui.listTA.setRowCount(0)
-            
+
             for indexProceso, process in enumerate(orders):
-                
+
                 self.ui.listTA.insertRow(indexProceso)
                 #~ try:
                 if True:
-                    
+
                     document = [doc for doc in process.documents if doc.kind['code'] == 12513][0]
-                    
+
                     item = cdTableWidgetItem.CDTableWidgetItem(u"{} {}".format(document.rol['person']['name'], document.rol['person']['name2']))
                     item.setFlags(item.flags().__xor__(QtCore.Qt.ItemIsEditable))
                     item.setData(self.ui.listTA.DOCUMENT, document)
@@ -748,14 +748,14 @@ class Manager(view.Manager):
 class CaptureView(view.CaptureView):
 
     def __init__(self, *args, **kwds):
-        
+
         view.CaptureView.__init__(self, *args, **kwds)
 
         # oldLevel = self.cnt.app.stdoutLog.level
         # self.cnt.app.stdoutLog.setLevel(logging.INFO)
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.__init__()")
-        
-        
+        self.app.log2sys ( 'info', "    orders view     CaptureView.__init__()" )
+
+
         # self.connect(self.ui.frame, QtCore.SIGNAL('returnPressed()'), self.returnPressed)
 
         # frameFont = QtGui.QFont()
@@ -764,8 +764,8 @@ class CaptureView(view.CaptureView):
 
         # self.ui.titulo.setFont(font)
         # self.ui.titulo.hide()
-        
-        
+
+
 
         self.ui.searchFR.hide()
 
@@ -779,7 +779,7 @@ class CaptureView(view.CaptureView):
         self.ui.dateED.setMaximumDate(QtCore.QDate().currentDate())
 
         # self.impuestoGeneralFactor = (self.cnt.app.generalTax + Decimal('100')) / Decimal('100')
-        
+
         ## PRODUCT SELECTOR
         # self.ui.productSelector = productSelector.Form(self)
         self.ui.productSelector.setStyleColor("#E4D460")
@@ -839,8 +839,8 @@ class CaptureView(view.CaptureView):
         # self._rangoPrecioActual = 0
 
         # self.origin_set(self.cnt.app.holder)
-        
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.__init__() - END")
+
+        self.app.log2sys ( 'info', "    orders view     CaptureView.__init__() - END" )
         # self.cnt.app.stdoutLog.setLevel(oldLevel)
 
 
@@ -890,7 +890,7 @@ class CaptureView(view.CaptureView):
         self.ui.discountED.clear()
 
         self.impuestoIncluido_set(False)
-        
+
         self.ui.taxED.clear()
 
         self.ui.totalED.clear()
@@ -934,14 +934,14 @@ class CaptureView(view.CaptureView):
     def set_data(self, document):
         # oldLevel = self.cnt.app.stdoutLog.level
         # self.cnt.app.stdoutLog.setLevel(logging.INFO)
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.set_data()")
-        
+        self.app.log2sys ( 'info', "    orders view     CaptureView.set_data()" )
+
         self.state_set(self.cnt.BUSY)
 
         view.CaptureView.set_data(self, document)
 
         ## Pedido
-        
+
         if document.status is None:
             self.ui.statusSL.setCurrentData(11203, initialToo=True)
         elif document.status == 'pendiente':
@@ -988,14 +988,14 @@ class CaptureView(view.CaptureView):
             print (""">>> Error @ orders.CaptureView.set_data()""")
             print ("""    Could not set document items\n""")
             raise
-        
+
         try:
             self.ui.subtotalED.setValue(document.subtotal, initialToo=True)
         except:
             print (""">>> Error @ orders.CaptureView.set_data()""")
             print ("""    Could not set document subtotal\n""")
             raise
-            
+
         try:
             if document.discounts:
                 self.ui.discountED.setValue(document.discounts[0].value, initialToo=True)
@@ -1004,20 +1004,20 @@ class CaptureView(view.CaptureView):
                     discountPercent = document.discounts[0].factor
                 else:
                     discountPercent = Decimal('0')
-                    
+
                 self.ui.discountFactorED.setValue(discountPercent, initialToo=True)
         except:
             print (""">>> Error @ orders.CaptureView.set_data()""")
             print ("""    Could not set document discounts\n""")
-            raise                        
+            raise
 
         try:
             if document.taxes:
                 tax = document.taxes['general']
-                
+
                 # 2015.01.22 self.ui.taxED.setValue(document['tax'], initialToo=True)
                 self.ui.taxED.setValue(tax['amount'], initialToo=True)
-                
+
                 # 2015.01.22 if document['taxpercent']:
                 if tax['factor']:
                     taxPercent = tax['factor']
@@ -1028,17 +1028,17 @@ class CaptureView(view.CaptureView):
             print (""">>> Error @ orders.CaptureView.set_data()""")
             print ("""    Could not set document taxes\n""")
             raise
-        
+
         try:
             self.ui.totalED.setValue(document.total, initialToo=True)
         except:
             print (""">>> Error @ orders.CaptureView.set_data()""")
             print ("""    Could not set document total\n""")
             raise
-    
+
         self.state_reset()
 
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.set_data() - END")
+        self.app.log2sys ( 'info', "    orders view     CaptureView.set_data() - END" )
         # self.cnt.app.stdoutLog.setLevel(oldLevel)
 
 
@@ -1049,7 +1049,7 @@ class CaptureView(view.CaptureView):
         documents = []
 
         document = {}
-        
+
         if self.ui.statusSL.isModified() or self.task == self.ADD:
             if unicode(self.ui.statusSL.text()) == 'Pendiente':
                 document['status'] = u'pendiente'
@@ -1102,13 +1102,13 @@ class CaptureView(view.CaptureView):
             # if items:
                 # document['items'] = items
                 # messages += self.ui.itemsTA.modificationMessages
-            
+
             items = []
-            for item in self.document.items:                
+            for item in self.document.items:
                 items.append(item.data)
-            
+
             document['items'] = items
-            
+
         if document:
             if self.task == self.EDIT:
                 document['id'] = self.initialDocument.id
@@ -1133,18 +1133,18 @@ class CaptureView(view.CaptureView):
 
     def load_documentKinds(self, processFase):
         # print("    processes view CaptureView.load_documentKinds()")
-        
+
         self.ui.documentKindLA.clear()
         self.ui.documentKindLA.references = []
 
         kinds = self.cnt.documentKinds_pull(reference=processFase, cast_=self.cnt.cast)
-        
+
         for index, kind in enumerate(kinds):
             self.ui.documentKindLA.setItemText(index, kind['name'].capitalize())
             self.ui.documentKindLA.setItemData(index, kind['code'])
             self.ui.documentKindLA.setItemData(index, kind, role=1001)
             self.ui.documentKindLA.references.append(kind['value'])
-        
+
         # self.ui.documentKindLA.current_setByData(int(self.cnt.documentKinds_pull(name='default', reference=processFase, cast_=self.cnt.cast)[0]['value']))
 
         # print("    processes view CaptureView.load_documentKinds() - END")
@@ -1152,7 +1152,7 @@ class CaptureView(view.CaptureView):
 
     def documentStatuss_load(self):
         # print("""   orders.view.Capture.documentStatuss_load()""")
-        
+
         statuss = self.cnt.documentStatuss()
         for status in statuss:
             self.ui.statusSL.addItem(status['name'], status['code'])
@@ -1189,7 +1189,7 @@ class CaptureView(view.CaptureView):
 
 
     def init(self, *args, **kwds):
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.init()")
+        self.app.log2sys ( 'info', "    orders view     CaptureView.init()" )
 
         view.CaptureView.init(self, *args, **kwds)
 
@@ -1205,7 +1205,7 @@ class CaptureView(view.CaptureView):
 
         ## ENTITY
         self.ui.entityCB.setMaxVisibleItems(15)
-        
+
         self.entities_load()
 
         # self.impuestoGeneralFactor = (self.cnt.app.generalTax + Decimal('100')) / Decimal('100')
@@ -1217,14 +1217,14 @@ class CaptureView(view.CaptureView):
 
         # impuesto = self.cnt.app.generalTax
         # self.ui.taxFactorED.setText("{}".format(impuesto))
-        
+
         self.ui.productSelector.init()
-        
+
         self.taxMode = self.txSTRIPPED
-        
+
         self.ui.itemsTA.init()
 
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.init() - END")
+        self.app.log2sys ( 'info', "    orders view     CaptureView.init() - END" )
 
 
     def isModified(self):
@@ -1274,7 +1274,7 @@ class CaptureView(view.CaptureView):
         if not self.ui.totalED.isValid():
             isValid = False
             self.mensajes += u"Total fuera de rango\n"
-            
+
         ## Search matching saved document
         if self.task == self.EDIT and self.cnt.order_exists(documents=[{'number':unicode(self.ui.numberED.text()), 'rol_id':self.ui.entityCB.currentData()}]):
             isValid = False
@@ -1289,9 +1289,9 @@ class CaptureView(view.CaptureView):
     def impuestoIncluido(self):
         return self._impuestoIncluido
     def impuestoIncluido_set(self, value):
-        
+
         if self.state is self.cnt.IDLE:
-        
+
             if value:
                 self._impuestoIncluido = True
             else:
@@ -1311,22 +1311,22 @@ class CaptureView(view.CaptureView):
 
     def loadList(self):
         # print("""    orders.CaptureView.loadList()""")
-        
+
         self.setCursor(QtCore.Qt.WaitCursor)
 
         products = self.cnt.products(rol_id=self.ui.entityCB.currentData(), status=[40161, 40163])
 
         self.ui.itemsTA.setRowCount(0)
         # self.ui.itemsTA.setSortingEnabled(False)
-        
+
         self.ui.itemsTA.state_set(self.cnt.BUSY)
-        
+
         for index, product in enumerate(products):
             item = self.document.item_insert(index, product=product)
-            
+
             self.ui.itemsTA.insertRow(index)
             self.ui.itemsTA.setDatosRenglon(index, instance=item)
-            
+
         self.ui.itemsTA.state_reset()
 
         #! What's this!!!   update_total()  should be called aparte
@@ -1342,7 +1342,7 @@ class CaptureView(view.CaptureView):
         self.setCursor(QtCore.Qt.ArrowCursor)
 
         # print("""    orders.CaptureView.loadList() - END""")
-        
+
 
     def loadPaymentConditions(self):
         conditions = self.cnt.paymentConditions()
@@ -1418,36 +1418,36 @@ class CaptureView(view.CaptureView):
         m = "pedidos.igu.Capture.returnPressed()"
         if self.ui.saveBU.isEnabled():
             self.save()
-        
+
 
     def save(self):
         #! This should call Process instance's method save
         #! Process data must be well hooked to data edition widgets
-        
+
         ## No se revisa validez de datos, para llegar aquí se tuvo que haber hecho
 
         # oldLevel = self.cnt.app.stdoutLog.level
         # self.cnt.app.stdoutLog.setLevel(logging.INFO)
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.save()")
-        
+        self.app.log2sys ( 'info', "    orders view     CaptureView.save()" )
+
         # data = self.modifiedData()
 
         if self.task == self.ADD:
             # order_id = self.cnt.process_save(**data)
-            
+
             self.document.status_set('open')
 
             status = self.document.process.push()
-            
+
             #! ReThink this
             # if status == 'acepcion changed':
                 # self.mst.eventRouter.emit(QtCore.SIGNAL('productosChanged()'))
         else:
             order_id = data['id']
             self.cnt.process_save(data)
-        
+
         # process = self.cnt.process(id=order_id)
-                
+
         # self.mst.details.setData(process)
 
 
@@ -1456,12 +1456,12 @@ class CaptureView(view.CaptureView):
 
         # document = self.cnt.create_process()
         # document.new()
-        
+
         self.mst.eventRouter.emit(QtCore.SIGNAL("ordersChanged()"))
 
         self.emit(QtCore.SIGNAL('captureViewClosed()'))
 
-        self.cnt.app.stdoutLog.info("    orders view     CaptureView.save() - END")
+        self.app.log2sys ( 'info', "    orders view     CaptureView.save() - END" )
         # self.cnt.app.stdoutLog.setLevel(oldLevel)
 
         # self.close()
@@ -1470,14 +1470,14 @@ class CaptureView(view.CaptureView):
     '''
     def setItem(self):
         # print("""\n    orders.view.Capture.setItem()""")
-        
+
         # product = eval("{}".format(item))
         product = self.sender().data
-        
+
         self.ui.itemsTA.insertRow()
 
         self.ui.itemsTA.setDatosRenglon(rowIndex=-1, product=product)
-        
+
         self.ui.itemsTA.setCurrentCell(self.ui.itemsTA.rowCount()-1, itemsTable.COL_QUANTITY)
         self.ui.itemsTA.editItem(self.ui.itemsTA.item(self.ui.itemsTA.rowCount()-1, itemsTable.COL_QUANTITY))
 
@@ -1490,9 +1490,9 @@ class CaptureView(view.CaptureView):
         return self._task
     def set_task(self, value):
         # print("""    orders.view.Capture.set_task()""")
-        
+
         self._task = value
-        
+
         self.ui.itemsTA.task = value
 
         self.taxMode = self.NO_TAX
@@ -1521,7 +1521,7 @@ class CaptureView(view.CaptureView):
         self.mst.setInnerStatus('hidden')
 
         self.show()
-        
+
         # print("""    orders.view.Capture.set_task()""")
     task = property(get_task, set_task)
 
@@ -1529,13 +1529,13 @@ class CaptureView(view.CaptureView):
     def entity_update(self):
         """orders.view.Capture.entity_update()"""
         if self.state is self.cnt.IDLE:
-            
+
             self.setCursor(QtCore.Qt.WaitCursor)
 
             origin = eval("{}".format(self.ui.entityCB.currentData(self.mst.DATAROLE_ROL)))
-            
+
             self.document.rol_set(origin)
-            
+
             self.ui.productSelector.dealer_set(origin)
 
             self.ui.itemsTA.origin_set(origin)
@@ -1557,9 +1557,9 @@ class CaptureView(view.CaptureView):
 
     def entities_load(self, entities=None):
         """orders.view.Capture.entities_load()"""
-        
+
         self.state_set(self.cnt.BUSY)
-        
+
         if not entities:
             entities = self.cnt.entities()
 
@@ -1611,7 +1611,7 @@ class CaptureView(view.CaptureView):
 
     def update_total(self):
         # print("    orders view    Capture.update_total()")
-        
+
         subtotal = self.ui.itemsTA.subtotal()
 
         if self.ui.discountFactorED.value():
@@ -1620,7 +1620,7 @@ class CaptureView(view.CaptureView):
             descuento = Decimal("0.00")
 
         total = subtotal - descuento
-        
+
         if self.ui.taxFactorED.text():
             impuesto = total * self.ui.taxFactorED.value() / Decimal("100")
         else:
@@ -1631,16 +1631,16 @@ class CaptureView(view.CaptureView):
         self.ui.discountED.setValue(descuento)
         self.ui.taxED.setValue(impuesto)
         self.ui.totalED.setValue(total)
-        
+
         self.document.subtotal_set(subtotal)
         self.document.discounts_set([{'amount':descuento, 'factor':self.ui.discountFactorED.value()}])
-        
+
         self.document.taxes_set({'general':{'name':self.ui.taxFactorED.name, 'amount':impuesto, 'factor':self.ui.taxFactorED.value()}})
         self.document.total_set(total)
-        
+
         if total:
             self.ui.textTotalLA.setText("Son {}".format(utilities.moneyToText(Decimal(str(total)))))
-        
+
         self.update_status()
 
         # print("    orders view    Capture.update_total() - END")
@@ -1663,8 +1663,8 @@ class Details(view.Details):
         # self._state.pop()
 
     def __init__(self, *args, **kwds):
-        
-        
+
+
         # self.mst = args[0]
         # self.cnt = self.mst.cnt
 
@@ -1677,40 +1677,40 @@ class Details(view.Details):
         icon.addPixmap(QtGui.QPixmap(":/Print.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ui.toImprimir.setIcon(icon)
         self.connect(self.ui.toImprimir, QtCore.SIGNAL("clicked()"), self.imprimir)
-        
+
         icon = QtGui.QIcon()
         icon.addPixmap(QtGui.QPixmap(":/Recycle.png"), QtGui.QIcon.Normal, QtGui.QIcon.Off)
         self.ui.toExportar.setIcon(icon)
         self.ui.toExportar.setToolTip(u"Exportar a formato xls")
         self.connect(self.ui.toExportar, QtCore.SIGNAL("clicked()"), self.exportarDetails)
 
-        
-        
-        
-        
-        
+
+
+
+
+
         # self.connect(self.mst.eventRouter, QtCore.SIGNAL('pedidosChanged()'), self.update)
         self.impresor = QtGui.QPrinter()
         # self._state = [self.cnt.IDLE]
-        
-    
+
+
     def exportarDetails(self):
-        
+
         try:
             path = self.cnt.path()
-            
+
             # order = [x for x in self.data.documents if x.kind['code']==12513][0]
-            
+
             order = self.data
-            
+
             items = self.cnt.documentItems(document_id=order.id)
-            
+
             filename = QtGui.QFileDialog.getSaveFileName(self, u"{} - Selecciona la ubicación del documento".format(self.cnt.app.name), os.path.join(path, "OrdComp{}.xls".format("{}-{}".format(order.number, (u"{}{}".format(order.rol['person']['name'], order.rol['person']['name2'])).replace(u'á', 'a').replace(u'é', 'e').replace(u'í', 'i').replace(u'ó', 'o').replace(u'ú', 'u').replace(u'ñ','n').replace('\n', '_')).replace(" ", "").replace(".", "").replace(",", "_"), "Orders (*.pdf)")))
-            
+
             if filename:
-            
+
                 self.setCursor(QtCore.Qt.WaitCursor)
-                
+
                 mainTitleStyle = xlwt.easyxf('font:name Arial, color-index red, bold on', num_format_str='#,##0.00')
                 style1 =         xlwt.easyxf(num_format_str='D-MMM-YY')
                 fieldStyle =     xlwt.easyxf('pattern:pattern solid, fore-color gray25; font:height 160; align:horiz center')
@@ -1790,7 +1790,7 @@ class Details(view.Details):
                 wb.save(filename)
 
                 self.setCursor(QtCore.Qt.ArrowCursor)
-                
+
                 result = QtGui.QMessageBox.information(self, u"Empresa Básica - Exportación de pedido", u"Archivo {} creado".format(filename, QtGui.QMessageBox.Ok), QtGui.QMessageBox.Ok)
 
         except:
@@ -1799,7 +1799,7 @@ class Details(view.Details):
             result = QtGui.QMessageBox.warning(self, u"Empresa Básica - Exportación de pedido", u"No se realizó la exportación".format(filename), QtGui.QMessageBox.Ok, QtGui.QMessageBox.Ok)
             if sys.exc_info()[1][0]==13:
                 print (sys.exc_info()[1][0])
-                
+
 
 
     def imprimir(self):
@@ -1891,27 +1891,27 @@ class Details(view.Details):
 
 
     def setData(self, document):
-        self.cnt.app.stdoutLog.info("    orders view         Details.setData()")
-    
+        self.app.log2sys ( 'info', "    orders view         Details.setData()" )
+
         self.data = document
-        
+
         document.items_set(self.cnt.documentItems(document_id=document.id))
-        
+
         self.clear()
-        
+
         self.ui.numberLA.setText("{}".format(document.number))
         self.ui.laFecha.setText(document.date.strftime("%d %b %Y"))
         self.ui.laOrigen.setText(u"{} {}".format(document.rol['person']['name'], document.rol['person']['name2']))
-        
+
         self.ui.laSubtotal.setText("%.2f" % document.subtotal)
-        
+
         if document.discounts:
             self.ui.laDescuentos.setText("%.2f" % document.discounts[0]['amount'])
-        
+
         ## Join taxes
-        
+
         self.ui.laImpuestos.setText("%.2f" % document.taxes['general']['amount'])
-        
+
         self.ui.laTotal.setText("%.2f" % document.total)
 
         labels = [u"Código", u"Nombre", u"Clasificación", u"Cantidad", u"Precio", u"Importe"]
@@ -1919,15 +1919,15 @@ class Details(view.Details):
         self.ui.itemsTA.setHorizontalHeaderLabels(labels)
 
         self.ui.itemsTA.setRowCount(0)
-        
+
         for itemIndex, item in enumerate(document.items):
-            
+
             self.ui.itemsTA.insertRow(itemIndex)
 
             self.ui.itemsTA.setRowHeight(itemIndex, 20)
 
             product = self.cnt.product(id=item.product['id'])
-            
+
             aception = [x for x in product['aceptions'] if x['rol_id']==document.rol['id']][0]
 
             tableItem = QtGui.QTableWidgetItem("{}".format(aception['code']))
@@ -1958,7 +1958,7 @@ class Details(view.Details):
             self.ui.itemsTA.setItem(itemIndex, 5, tableItem)
 
         # self.ui.itemsTA.horizontalHeader().setResizeMode(2, QtGui.QHeaderView.Stretch)
-        
+
         self.ui.itemsTA.resizeColumnToContents(0)
         self.ui.itemsTA.resizeColumnToContents(1)
         self.ui.itemsTA.resizeColumnToContents(2)
@@ -1966,7 +1966,7 @@ class Details(view.Details):
         self.ui.itemsTA.resizeColumnToContents(4)
         self.ui.itemsTA.resizeColumnToContents(5)
 
-        self.cnt.app.stdoutLog.info("    orders view         Details.setData() - END")
+        self.app.log2sys ( 'info', "    orders view         Details.setData() - END" )
 
 
 class Splitter(QtGui.QSplitter):
